@@ -1,0 +1,45 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if category %}{{ category.title }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="w3-content w3-padding" style="max-width:1564px; margin-top:90px">
+  <div class="product-detail">
+    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" style="opacity:0.8">
+    <h1 class="w3-center">{{ product.name }}</h1>
+    <h2 class="w3-center"><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h2>
+    <p class="price w3-center">${{ product.price }}</p>
+	<!--This is the stock amount and shows available or not available message-->
+    <p class="stock w3-center">Stock: {{ product.stock }} 
+	{% if product.available is True %}
+	available
+	{% else %}
+	Not Available
+	{% endif %}
+	</p>
+	<!--This is the form that shows depends on the stock controlled by admin-->
+	<form class="w3-center" action="{% url "cart:cart_add" product.id %}" method="post">
+	<!--form action's url is also important to pointout appropriate url depends on the product.-->
+		{% csrf_token %}
+        <tr><th>
+		<label for="id_quantity">Quantity:</label>
+	    </th><td>
+	    <select id="id_quantity" name="quantity" required>
+		    {% for i in stock_number %}
+			<option value="{{forloop.counter}}">{{forloop.counter}}</option>
+			{% endfor %}
+        </select>
+		<input id="id_update" name="update" type="hidden" value="False" />
+	    </td></tr>
+        
+        <input type="submit" value="Add to cart" style="background-color:#9e9e9e;">
+    </form>
+    <div class="w3-center">
+      {{ product.description|linebreaks }}
+    </div>
+  </div>
+</div>
+{% endblock %}

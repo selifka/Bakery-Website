@@ -1,0 +1,39 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="w3-content w3-padding" style="max-width:1564px; margin-top:55px">
+    <ul class="w3-navbar w3-light-grey w3-black w3-opacity w3-hover-opacity-off" id="myNavbar">
+      <li {% if not category %}class="selected"{% endif %}>
+        <a href="{% url "shop:product_list" %}">All</a>
+      </li>
+      {% for c in categories %}
+        <li {% if category.slug == c.slug %}class="selected"{% endif %}>
+          <a href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+</div>
+ <h1 class="w3-border-bottom w3-border-light-grey w3-padding-12" style="max-width:1564px; margin-top:0px; margin-bottom:30px;">{% if category %}{{ category.name }}{% else %}Products{% endif %}</h1>
+    {% for product in products %}
+        <div class="w3-col l4 m6 w3-margin-bottom">
+            <div class="w3-display-container">
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" width="350" height="300" style="opacity:0.8">
+                </a>
+            </div>
+                <p>
+                <a href="{{ product.get_absolute_url }}">{{ product.name }}</a><br>
+                ${{ product.price }}
+                </p>
+        </div>
+        {% endfor %}
+        {% endblock %}
+<!-- Footer -->
+<footer class="w3-center w3-light-grey w3-padding-16">
+  <p>Created by: Team A</p>
+</footer>

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href ="{% static 'css/w3.css' %}" rel="stylesheet">
+<link href="{% static 'css/font-awesome.css' %}" rel="stylesheet">
+<link href="{% static "css/base.css" %}" rel="stylesheet">
+<style>
+body {font-family: "Times New Roman", Georgia, Serif;}
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Playfair Display";
+    letter-spacing: 5px;
+}
+.w3-tag{height:15px;width:15px;padding:0;margin-top:6px}
+</style>
+<body>
+<!-- Navbar -->
+<div class="w3-top">
+  <ul class="w3-navbar w3-light-grey w3-wide w3-padding-8 w3-card-2">
+        <li>
+            <a href="/" class="w3-padding-large w3-hover-white w3-left">Menu</a>
+            <a href="{% url 'shop:about' %}" class="w3-padding-large w3-hover-white w3-left">About</a>
+            <a href="{% url 'shop:contact' %}" class="w3-padding-large w3-hover-white w3-left">Contact Us</a>
+        </li>
+        <li class="w3-right">
+            {% with total_items=cart|length %}
+            {% if cart|length > 0 %}
+            <a href="{% url "cart:cart_detail" %}" class="w3-padding-large w3-hover-white w3-right">{{ total_items }} item{{ total_items|pluralize }},
+            ${{ cart.get_total_price }}
+            </a>
+            <a class="w3-padding-large w3-hover-white w3-right">Your cart:</a>
+            {% else %}
+            <a class="w3-padding-large w3-hover-white w3-margin-right">Your cart is empty.</a>
+            {% endif %}
+            {% endwith %}
+        </li>
+  </ul>
+</div>
+<!---Content--->  
+<div class="w3-content w3-padding" style="max-width:1564px; margin-top:-40px">
+    <div class="w3-center w3-row-padding w3-padding-32">
+        {% block content %}
+        {% endblock %}
+    </div>
+</div>
+<footer class="w3-center w3-light-grey w3-padding-16">
+    <p>Created by: Team A</p>
+</footer>
+</body>
+</html>

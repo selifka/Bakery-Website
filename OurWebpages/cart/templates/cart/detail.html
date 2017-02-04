@@ -1,0 +1,62 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  Your shopping cart
+{% endblock %}
+
+{% block content %}
+  <h1>Your shopping cart</h1>
+  <table class="cart" style="margin-top:50px; margin-bottom:50px;">
+    <thead>
+      <tr>
+        <th class="w3-light-grey">Image</th>
+        <th class="w3-light-grey">Product</th>
+        <th class="w3-light-grey">Quantity</th>
+        <th class="w3-light-grey">Remove</th>
+        <th class="w3-light-grey">Unit price</th>                
+        <th class="w3-light-grey">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+        {% with product=item.product %}
+          <tr>
+            <td>
+              <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static "img/no_image.png" %}{% endif %}" style="opacity:0.8">                    
+              </a>
+            </td>
+            <td>{{ product.name }}</td>
+            <td>
+              <form action="{% url "cart:cart_add" product.id %}" method="post">
+                {{ item.update_quantity_form.quantity }}
+                {{ item.update_quantity_form.update }}
+                <input type="submit" value="Update">
+                {% csrf_token %}
+              </form>
+            </td>
+            <td><a href="{% url "cart:cart_remove" product.id %}">Remove</a></td>
+            <td class="num">${{ item.price }}</td>
+            <td class="num">${{ item.total_price }}</td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+      <tr class="total w3-light-grey">
+        <td>Total</td>
+        <td colspan="4"></td>
+        <td class="num">${{ cart.get_total_price }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="text-right">
+    <a href="{% url "shop:product_list" %}" class="button light">Continue shopping</a>
+    <a href="{% url "orders:order_create" %}" class="button">
+  Checkout
+</a>
+  </p>
+{% endblock %}
+<!-- Footer -->
+<footer class="w3-center w3-light-grey w3-padding-16">
+  <p>Created by: Team A</p>
+</footer>
